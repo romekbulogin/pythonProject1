@@ -76,7 +76,6 @@ for event in longpoll.listen():
                     print("Text message: ", event.text, " from id: ", event.user_id)
                 except NameError:
                     print(NameError)
-
         if event.text == 'Начать':
             if event.from_user:
                 try:
@@ -84,7 +83,6 @@ for event in longpoll.listen():
                         user_id=event.user_id,
                         message='Привет! Виртуальный наставник Макс готов ответить на любой твой вопрос',
                         random_id=random.randint(0, 999999999),
-                        sticker_id = 51
                     )
                 except NameError:
                     print(NameError)
