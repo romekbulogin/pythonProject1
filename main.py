@@ -77,6 +77,16 @@ for event in longpoll.listen():
                 except NameError:
                     print(NameError)
 
+        if event.text == 'Начать':
+            if event.from_user:
+                try:
+                    vk.messages.send(
+                        user_id=event.user_id,
+                        message='Привет! Виртуальный наставник Макс готов ответить на любой твой вопрос',
+                        random_id=random.randint(0, 999999999)
+                    )
+                except NameError:
+                    print(NameError)
         if event.text == 'Расшифровка аудиторий':
             if event.from_user:
                 try:
