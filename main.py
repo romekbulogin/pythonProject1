@@ -83,7 +83,8 @@ for event in longpoll.listen():
                     vk.messages.send(
                         user_id=event.user_id,
                         message='Привет! Виртуальный наставник Макс готов ответить на любой твой вопрос',
-                        random_id=random.randint(0, 999999999)
+                        random_id=random.randint(0, 999999999),
+                        sticker_id = 51
                     )
                 except NameError:
                     print(NameError)
