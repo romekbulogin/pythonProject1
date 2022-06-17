@@ -42,7 +42,7 @@ vk = vk_session.get_api()
 questList = copyBase()
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-        if not questList.__contains__(event.text):
+        if not questList.__contains__(event.text) and not 'Начать':
             keyboard = VkKeyboard(one_time=True)
             if event.from_user:
                 try:
