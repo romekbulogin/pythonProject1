@@ -44,6 +44,7 @@ for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
         if not questList.__contains__(event.text) and event.text!='Начать':
             keyboard = VkKeyboard(one_time=True)
+
             if event.from_user:
                 try:
                     with db:
