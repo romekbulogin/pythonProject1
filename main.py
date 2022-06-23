@@ -36,18 +36,28 @@ def copyBase():
         print(NameError)
     return questList
 
+def searchContains(questList,strList):
+    for i in questList:
+        for word in strList:
+            if i.find(word):
+                return i
+
 attachments = []
 longpoll = VkLongPoll(vk_session)
 vk = vk_session.get_api()
 questList = copyBase()
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-        if not questList.__contains__(event.text) and event.text!='Начать':
+        message = event.text
+        lst = message.split()
+        print(searchContains(questList,lst))
+        if not questList.__contains__(searchContains(questList,lst)) and event.text!='Начать' and 'хуй' not in event.text:
             keyboard = VkKeyboard(one_time=True)
+            print(searchContains(questList,lst))
             if event.from_user:
                 try:
                     with db:
-                        for quest in Question.select().where(Question.question.contains(event.text)):
+                        for quest in Question.select().where(Question.question.contains(searchContains(questList,lst))):
                             keyboard.add_button(quest.question, VkKeyboardColor.POSITIVE)
                             keyboard.add_line()
                         keyboard.add_openlink_button('Задать вопрос','https://docs.google.com/forms/d/e/1FAIpQLSf6nh4sE13CFDrg0BUJYVxZ1LcCMTS2O2J6nIo3hle99xSXxw/viewform')
@@ -61,8 +71,7 @@ for event in longpoll.listen():
                 except Exception:
                     print(NameError)
 
-        if questList.__contains__(event.text):
-            print('work')
+        if questList.__contains__(searchContains(questList,lst)):
             keyboard = VkKeyboard(one_time=True)
             if event.from_user:
                 try:
@@ -82,6 +91,16 @@ for event in longpoll.listen():
                     vk.messages.send(
                         user_id=event.user_id,
                         message='Привет! Виртуальный наставник Макс готов ответить на любой твой вопрос',
+                        random_id=random.randint(0, 999999999),
+                    )
+                except NameError:
+                    print(NameError)
+        if 'хуй' in event.text:
+            if event.from_user:
+                try:
+                    vk.messages.send(
+                        user_id=event.user_id,
+                        sticker_id=51655,
                         random_id=random.randint(0, 999999999),
                     )
                 except NameError:
