@@ -42,7 +42,7 @@ vk = vk_session.get_api()
 questList = copyBase()
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-        if not questList.__contains__(event.text) and event.text!='Начать' and 'хуй' not in event.text:
+        if not questList.__contains__(event.text) and event.text!='Начать':
             keyboard = VkKeyboard(one_time=True)
             if event.from_user:
                 try:
@@ -82,16 +82,6 @@ for event in longpoll.listen():
                     vk.messages.send(
                         user_id=event.user_id,
                         message='Привет! Виртуальный наставник Макс готов ответить на любой твой вопрос',
-                        random_id=random.randint(0, 999999999),
-                    )
-                except NameError:
-                    print(NameError)
-        if 'хуй' in event.text:
-            if event.from_user:
-                try:
-                    vk.messages.send(
-                        user_id=event.user_id,
-                        sticker_id=51655,
                         random_id=random.randint(0, 999999999),
                     )
                 except NameError:
