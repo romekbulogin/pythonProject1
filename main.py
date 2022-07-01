@@ -4,21 +4,30 @@ import random
 import psycopg2
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from vk_api.longpoll import VkLongPoll, VkEventType
-
+#97e96d64a13704faa9f0112540ff508d74854abb751865b0dfeed9204e4ce56a1c4c37408d1164ebdbaf5
+#727a21e5aff72e263de80f9dfc135f24858365045809a8336b2ba4af19fd8d7c5bb13aafb4e20d725bccd
 
 vk_session = vk_api.VkApi(token='727a21e5aff72e263de80f9dfc135f24858365045809a8336b2ba4af19fd8d7c5bb13aafb4e20d725bccd')
 db = PostgresqlDatabase('d8k9ke2c61h3hb', host='ec2-3-228-235-79.compute-1.amazonaws.com', port='5432', user='olezekfprmlfip', password='cf1b053ec8d0bcdec4e228e724d7a3b3058feade8ecf852579639523f37a0a08')
+
+def searchByKeyWord(quickList,lst):
+    for i in quickList:
+        for word in lst:
+            if word.find(i):
+                return word
 
 class BaseModel(Model):
     class Meta:
         database = db
 
-class Question(BaseModel):
+
+class QuestionKey(BaseModel):
     id = PrimaryKeyField(unique=True)
     question = TextField()
     answer = TextField()
+    key_word = TextField()
     class Meta:
-        table_name = 'Question'
+        table_name = 'QuestionKey'
 
 try:
     db.connect()
@@ -30,7 +39,7 @@ def copyBase():
     questList = []
     try:
         with db:
-            for quest in Question.select():
+            for quest in QuestionKey.select():
                 questList.append(quest.question)
     except NameError:
         print(NameError)
@@ -44,11 +53,10 @@ for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
         if not questList.__contains__(event.text) and event.text!='Начать':
             keyboard = VkKeyboard(one_time=True)
-
             if event.from_user:
                 try:
                     with db:
-                        for quest in Question.select().where(Question.question.contains(event.text)):
+                        for quest in QuestionKey.select().where(QuestionKey.key_word.contains(event.text)):
                             keyboard.add_button(quest.question, VkKeyboardColor.POSITIVE)
                             keyboard.add_line()
                         keyboard.add_openlink_button('Задать вопрос','https://docs.google.com/forms/d/e/1FAIpQLSf6nh4sE13CFDrg0BUJYVxZ1LcCMTS2O2J6nIo3hle99xSXxw/viewform')
@@ -68,7 +76,7 @@ for event in longpoll.listen():
             if event.from_user:
                 try:
                     with db:
-                        for quest in Question.select().where(Question.question.contains(event.text)):
+                        for quest in QuestionKey.select().where(QuestionKey.question.contains(event.text)):
                             vk.messages.send(
                                 user_id=event.user_id,
                                 message=quest.answer,
